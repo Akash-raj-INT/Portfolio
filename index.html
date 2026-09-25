@@ -42,8 +42,12 @@
   <!-- Retro N64 Scanline Overlay (Toggleable) -->
   <div class="scanlines" id="scanlines"></div>
 
-  <!-- Audio Toggle Floating Controller -->
+  <!-- Floating Controller (View Mode & Audio) -->
   <div class="audio-control-bar">
+    <button id="view-mode-btn" class="n64-pill-btn mode-btn" title="Toggle Phone / Desktop View Mode">
+      <i data-lucide="smartphone" id="view-mode-icon"></i>
+      <span id="view-mode-label">Phone Mode</span>
+    </button>
     <button id="audio-toggle-btn" class="n64-pill-btn sound-btn" title="Toggle Sound Effects">
       <i data-lucide="volume-2" id="sound-icon"></i>
       <span>SFX: <strong id="sound-status">ON</strong></span>
@@ -79,6 +83,12 @@
           GitHub
         </a>
         <a href="#contact" class="nav-cta"><i data-lucide="send"></i> Contact Me</a>
+        <div class="nav-mobile-mode-wrap">
+          <button id="mobile-nav-mode-btn" class="n64-pill-btn mode-btn" style="width: 100%; justify-content: center;">
+            <i data-lucide="smartphone" id="mobile-nav-mode-icon"></i>
+            <span id="mobile-nav-mode-label">Switch to Desktop Mode</span>
+          </button>
+        </div>
       </nav>
 
       <button class="mobile-menu-toggle" id="mobile-menu-btn" aria-label="Toggle Navigation">
@@ -1067,7 +1077,7 @@
   <!-- Application Scripts -->
   <script src="js/soundEngine.js"></script>
   <script src="js/mario3d.js"></script>
-  <script src="js/portfolio.js?v=20260925_10"></script>
+  <script src="js/portfolio.js?v=20260925_11"></script>
 </body>
 
 </html>

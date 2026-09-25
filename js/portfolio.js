@@ -771,6 +771,68 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  /* ------------------------------------------------------------------------
+     11. Phone Mode / Desktop Mode Switcher
+     ------------------------------------------------------------------------ */
+  const viewModeBtn = document.getElementById('view-mode-btn');
+  const viewModeIcon = document.getElementById('view-mode-icon');
+  const viewModeLabel = document.getElementById('view-mode-label');
+  const mobileNavModeBtn = document.getElementById('mobile-nav-mode-btn');
+  const mobileNavModeIcon = document.getElementById('mobile-nav-mode-icon');
+  const mobileNavModeLabel = document.getElementById('mobile-nav-mode-label');
+
+  function updateModeUI(mode) {
+    const isPhone = mode === 'phone';
+    if (isPhone) {
+      document.body.classList.add('forced-phone-mode');
+      if (viewModeLabel) viewModeLabel.textContent = 'Desktop Mode';
+      if (viewModeIcon) viewModeIcon.setAttribute('data-lucide', 'monitor');
+      if (mobileNavModeLabel) mobileNavModeLabel.textContent = 'Switch to Desktop Mode';
+      if (mobileNavModeIcon) mobileNavModeIcon.setAttribute('data-lucide', 'monitor');
+    } else {
+      document.body.classList.remove('forced-phone-mode');
+      if (viewModeLabel) viewModeLabel.textContent = 'Phone Mode';
+      if (viewModeIcon) viewModeIcon.setAttribute('data-lucide', 'smartphone');
+      if (mobileNavModeLabel) mobileNavModeLabel.textContent = 'Switch to Phone Mode';
+      if (mobileNavModeIcon) mobileNavModeIcon.setAttribute('data-lucide', 'smartphone');
+    }
+
+    if (window.lucide) window.lucide.createIcons();
+
+    if (window.mario3D && typeof window.mario3D.onViewModeChanged === 'function') {
+      window.mario3D.onViewModeChanged(isPhone || window.innerWidth < 768);
+    }
+  }
+
+  function toggleViewMode() {
+    const isCurrentlyPhone = document.body.classList.contains('forced-phone-mode') || (window.innerWidth < 768 && !localStorage.getItem('akash_view_mode_preference'));
+    const nextMode = isCurrentlyPhone ? 'desktop' : 'phone';
+    localStorage.setItem('akash_view_mode_preference', nextMode);
+    updateModeUI(nextMode);
+    if (window.soundEngine) window.soundEngine.playCoin();
+  }
+
+  if (viewModeBtn) {
+    viewModeBtn.addEventListener('click', toggleViewMode);
+  }
+
+  if (mobileNavModeBtn) {
+    mobileNavModeBtn.addEventListener('click', () => {
+      toggleViewMode();
+      if (navLinks) navLinks.classList.remove('mobile-open');
+    });
+  }
+
+  // Auto-detect on load
+  const savedPref = localStorage.getItem('akash_view_mode_preference');
+  if (savedPref) {
+    updateModeUI(savedPref);
+  } else if (window.innerWidth < 768) {
+    updateModeUI('phone');
+  } else {
+    updateModeUI('desktop');
+  }
+
   // Confetti helper
   function triggerConfetti() {
     if (window.confetti) {

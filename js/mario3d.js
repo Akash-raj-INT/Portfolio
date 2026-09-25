@@ -26,10 +26,13 @@ class Mario3DEngine {
     
     // Scroll tracking & GSAP Camera Targets
     const initialX = this.isMobile ? 0 : 2.0;
-    this.targetCamPos = new THREE.Vector3(0, 0, 9);
-    this.currentCamPos = new THREE.Vector3(0, 0, 9);
-    this.marioTargetPos = new THREE.Vector3(initialX, 0.1, 0.2);
-    this.marioCurrentPos = new THREE.Vector3(initialX, 0.1, 0.2);
+    const initialY = this.isMobile ? 1.4 : 0.1;
+    const initialZ = this.isMobile ? -1.2 : 0.2;
+    const initialCamZ = this.isMobile ? 10.5 : 9;
+    this.targetCamPos = new THREE.Vector3(0, 0, initialCamZ);
+    this.currentCamPos = new THREE.Vector3(0, 0, initialCamZ);
+    this.marioTargetPos = new THREE.Vector3(initialX, initialY, initialZ);
+    this.marioCurrentPos = new THREE.Vector3(initialX, initialY, initialZ);
     
     // Deform / Drag state for SM64 Face Stretch
     this.isDragging = false;
@@ -456,25 +459,31 @@ class Mario3DEngine {
       }
     });
 
-    // 1. Hero -> N64 Controller Deck & About
-    tl.to(this.targetCamPos, { x: 1.2, y: -0.6, z: 8.2, duration: 1 })
-      .to(this.marioTargetPos, { x: -1.8, y: 0.4, z: 0.5, duration: 1 }, 0)
-      
-    // 2. About -> Skills
-      .to(this.targetCamPos, { x: -1.5, y: -1.2, z: 8.8, duration: 1 })
-      .to(this.marioTargetPos, { x: 2.2, y: -0.2, z: 0.8, duration: 1 }, 1)
-
-    // 3. Skills -> Experience
-      .to(this.targetCamPos, { x: 0, y: -1.8, z: 9.2, duration: 1 })
-      .to(this.marioTargetPos, { x: -2.4, y: -0.8, z: 0.2, duration: 1 }, 2)
-
-    // 4. Experience -> Projects
-      .to(this.targetCamPos, { x: 1.6, y: -2.2, z: 8.5, duration: 1 })
-      .to(this.marioTargetPos, { x: 2.5, y: 0.6, z: 1.0, duration: 1 }, 3)
-
-    // 5. Projects -> Education & Contact
-      .to(this.targetCamPos, { x: 0, y: -0.5, z: 7.8, duration: 1 })
-      .to(this.marioTargetPos, { x: 0, y: 0.3, z: 1.2, duration: 1 }, 4);
+    // Responsive 3D Camera & Mario Trajectories
+    if (this.isMobile) {
+      tl.to(this.targetCamPos, { x: 0, y: -0.6, z: 10.2, duration: 1 })
+        .to(this.marioTargetPos, { x: 0, y: 1.0, z: -1.5, duration: 1 }, 0)
+        .to(this.targetCamPos, { x: 0, y: -1.2, z: 10.8, duration: 1 })
+        .to(this.marioTargetPos, { x: 0, y: 0.8, z: -1.2, duration: 1 }, 1)
+        .to(this.targetCamPos, { x: 0, y: -1.8, z: 11.0, duration: 1 })
+        .to(this.marioTargetPos, { x: 0, y: 0.6, z: -1.5, duration: 1 }, 2)
+        .to(this.targetCamPos, { x: 0, y: -2.2, z: 10.5, duration: 1 })
+        .to(this.marioTargetPos, { x: 0, y: 0.8, z: -1.0, duration: 1 }, 3)
+        .to(this.targetCamPos, { x: 0, y: -0.5, z: 9.8, duration: 1 })
+        .to(this.marioTargetPos, { x: 0, y: 0.5, z: -0.8, duration: 1 }, 4);
+    } else {
+      // Desktop Cinematic Wide Trajectory
+      tl.to(this.targetCamPos, { x: 1.2, y: -0.6, z: 8.2, duration: 1 })
+        .to(this.marioTargetPos, { x: -1.8, y: 0.4, z: 0.5, duration: 1 }, 0)
+        .to(this.targetCamPos, { x: -1.5, y: -1.2, z: 8.8, duration: 1 })
+        .to(this.marioTargetPos, { x: 2.2, y: -0.2, z: 0.8, duration: 1 }, 1)
+        .to(this.targetCamPos, { x: 0, y: -1.8, z: 9.2, duration: 1 })
+        .to(this.marioTargetPos, { x: -2.4, y: -0.8, z: 0.2, duration: 1 }, 2)
+        .to(this.targetCamPos, { x: 1.6, y: -2.2, z: 8.5, duration: 1 })
+        .to(this.marioTargetPos, { x: 2.5, y: 0.6, z: 1.0, duration: 1 }, 3)
+        .to(this.targetCamPos, { x: 0, y: -0.5, z: 7.8, duration: 1 })
+        .to(this.marioTargetPos, { x: 0, y: 0.3, z: 1.2, duration: 1 }, 4);
+    }
   }
 
   /* ------------------------------------------------------------------------
@@ -675,15 +684,30 @@ class Mario3DEngine {
     this.renderer.render(this.scene, this.camera);
   }
 
+  onViewModeChanged(isPhone) {
+    this.isMobile = isPhone;
+    const targetX = this.isMobile ? 0 : 2.0;
+    const targetY = this.isMobile ? 1.4 : 0.1;
+    const targetZ = this.isMobile ? -1.2 : 0.2;
+    this.marioTargetPos.set(targetX, targetY, targetZ);
+    this.targetCamPos.z = this.isMobile ? 10.5 : 9;
+  }
+
   bindEvents() {
     const onResize = () => {
       this.width = window.innerWidth;
       this.height = window.innerHeight;
-      this.isMobile = this.width < 768;
+      this.isMobile = this.width < 768 || document.body.classList.contains('forced-phone-mode');
       this.camera.aspect = this.width / this.height;
       this.camera.updateProjectionMatrix();
       this.renderer.setSize(this.width, this.height);
       this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, this.isMobile ? 1.25 : 2));
+
+      const targetX = this.isMobile ? 0 : 2.0;
+      const targetY = this.isMobile ? 1.4 : 0.1;
+      const targetZ = this.isMobile ? -1.2 : 0.2;
+      this.marioTargetPos.set(targetX, targetY, targetZ);
+      this.targetCamPos.z = this.isMobile ? 10.5 : 9;
     };
     window.addEventListener('resize', onResize);
 

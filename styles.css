@@ -1595,7 +1595,10 @@ svg.icon-svg {
   color: var(--mario-yellow);
 }
 
-/* Responsive Rules */
+/* ==========================================================================
+   Comprehensive Mobile & Tablet Responsive Design System
+   ========================================================================== */
+
 @media (max-width: 1024px) {
   .skills-grid, .projects-grid { grid-template-columns: repeat(2, 1fr); }
   .about-grid, .credentials-grid, .contact-grid { grid-template-columns: 1fr; }
@@ -1604,13 +1607,484 @@ svg.icon-svg {
 }
 
 @media (max-width: 768px) {
-  .nav-links { display: none; }
-  .mobile-menu-toggle { display: block; }
-  .skills-grid, .projects-grid { grid-template-columns: 1fr; }
-  .hero-title { font-size: 2.2rem; }
-  .hero-stats { grid-template-columns: 1fr; }
-  .mario-controls-hud { position: static; width: 100%; margin-top: 20px; }
-  .custom-cursor, .cursor-follower { display: none !important; }
+  /* Global Mobile Rules */
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
+  }
+  
+  .container {
+    padding: 0 16px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Disable Studio Cursor on Mobile */
+  .custom-cursor, .cursor-follower {
+    display: none !important;
+  }
+
+  /* Navbar */
+  .navbar {
+    padding: 10px 0;
+  }
+  .nav-container {
+    padding: 0 16px;
+  }
+  .nav-links {
+    display: none;
+  }
+  .mobile-menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Floating Controller & Audio Bar on Mobile */
+  .audio-control-bar {
+    position: fixed;
+    top: auto;
+    bottom: 16px;
+    right: 12px;
+    left: 12px;
+    justify-content: center;
+    gap: 8px;
+    z-index: 990;
+    background: rgba(10, 13, 20, 0.90);
+    backdrop-filter: blur(16px);
+    padding: 6px 12px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-accent);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+  }
+  .audio-control-bar .n64-pill-btn {
+    padding: 6px 10px;
+    font-size: 0.72rem;
+    gap: 5px;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+  .audio-control-bar .n64-pill-btn:hover {
+    transform: none;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  /* Hero Section Stacking & 3D Canvas Alignment */
+  .hero-section {
+    min-height: auto;
+    padding-top: 80px;
+    padding-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: visible;
+    position: relative;
+  }
+
+  .canvas-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    touch-action: pan-y;
+    pointer-events: auto;
+  }
+  .canvas-wrapper canvas {
+    touch-action: pan-y;
+  }
+
+  /* Instructions overlay sits cleanly without colliding */
+  .canvas-instruction-overlay {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    margin: 8px auto 14px auto;
+    width: calc(100% - 32px);
+    max-width: 360px;
+    padding: 8px 14px;
+    font-size: 0.72rem;
+    text-align: center;
+    justify-content: center;
+    border-radius: var(--radius-full);
+    z-index: 2;
+    box-sizing: border-box;
+  }
+  .canvas-instruction-overlay p {
+    font-size: 0.72rem;
+  }
+  .pulse-hand {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Hero Content Card with enhanced contrast */
+  .hero-content {
+    width: 100%;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    z-index: 3;
+    pointer-events: auto;
+  }
+
+  .hero-text-block {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 24px 18px;
+    border-radius: var(--radius-lg);
+    background: rgba(10, 13, 20, 0.92);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 153, 255, 0.35);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.75);
+    box-sizing: border-box;
+  }
+
+  .n64-banner {
+    font-size: 0.55rem;
+    padding: 4px 10px;
+    margin-bottom: 12px;
+  }
+
+  .hero-title {
+    font-size: 2.1rem;
+    line-height: 1.15;
+    margin-bottom: 8px;
+  }
+
+  .hero-subtitle {
+    font-size: 1.05rem;
+    margin-bottom: 14px;
+  }
+
+  .hero-description {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 18px;
+  }
+
+  /* Hero Actions: 2x2 grid on mobile for easy finger tapping */
+  .hero-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+    margin-bottom: 18px;
+  }
+
+  .hero-actions .btn {
+    padding: 10px 8px;
+    font-size: 0.8rem;
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  /* Quick Stats Cards */
+  .hero-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 12px;
+    width: 100%;
+  }
+
+  .stat-card {
+    padding: 12px 10px;
+    text-align: center;
+  }
+
+  .stat-card:last-child {
+    grid-column: span 2;
+  }
+
+  .stat-num {
+    font-size: 1.25rem;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+  }
+
+  /* 3D Mario Controls HUD: Clean card below hero */
+  .mario-controls-hud {
+    position: relative;
+    bottom: auto;
+    right: auto;
+    width: 100%;
+    max-width: 100%;
+    margin: 16px 0 0 0;
+    padding: 14px 12px;
+    border-radius: var(--radius-md);
+    z-index: 3;
+    background: rgba(10, 13, 20, 0.90);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    box-sizing: border-box;
+  }
+
+  .hud-title {
+    font-size: 0.72rem;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+
+  .hud-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+
+  .hud-btn {
+    padding: 6px 2px;
+    font-size: 0.68rem;
+    justify-content: center;
+  }
+
+  .hud-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .hud-action-btn {
+    padding: 8px 4px;
+    font-size: 0.72rem;
+    justify-content: center;
+  }
+
+  /* N64 Controller Deck */
+  .n64-controller-section {
+    padding: 30px 0;
+  }
+
+  .controller-card {
+    padding: 20px 14px;
+    gap: 16px;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .controller-header h3 {
+    font-size: 1.15rem;
+  }
+
+  .controller-header p {
+    font-size: 0.8rem;
+  }
+
+  .controller-pad {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    width: 100%;
+  }
+
+  .dpad-group {
+    transform: scale(0.9);
+  }
+
+  .joystick-ring {
+    width: 85px;
+    height: 85px;
+  }
+
+  .action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .n64-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 1rem;
+  }
+
+  .c-buttons {
+    transform: scale(0.85);
+  }
+
+  /* Grids: Single Column for Clean Stacking */
+  .skills-grid, .projects-grid, .about-grid, .credentials-grid, .contact-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .section-title {
+    font-size: 1.85rem;
+  }
+
+  .section-tag {
+    font-size: 0.75rem;
+  }
+
+  .section-header {
+    margin-bottom: 25px;
+  }
+
+  .project-card, .skill-category-card, .about-card, .cred-card, .c-info-card, .contact-form-card {
+    padding: 20px 14px;
+    box-sizing: border-box;
+  }
+
+  .btn-project-details {
+    width: 100%;
+    padding: 12px;
+    font-size: 0.88rem;
+  }
+
+  /* Experience Timeline */
+  .timeline {
+    padding-left: 20px;
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .timeline::before {
+    left: 8px;
+  }
+
+  .timeline-marker {
+    left: -19px;
+    width: 22px;
+    height: 22px;
+    font-size: 0.65rem;
+  }
+
+  .timeline-content {
+    margin-left: 10px;
+    padding: 18px 14px;
+  }
+
+  .job-meta {
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.78rem;
+  }
+
+  /* Modals: Clean sizing on mobile */
+  .modal {
+    padding: 10px;
+  }
+
+  .modal-content {
+    width: 96vw !important;
+    max-width: 96vw !important;
+    max-height: 88vh;
+    padding: 20px 14px;
+    border-radius: var(--radius-md);
+  }
+
+  .modal-header h3 {
+    font-size: 1.1rem;
+  }
+
+  .resume-body {
+    padding: 10px 4px;
+    font-size: 0.82rem;
+  }
+
+  .r-header h2 {
+    font-size: 1.35rem;
+  }
+
+  .r-contact {
+    font-size: 0.75rem;
+    line-height: 1.5;
+    word-break: break-word;
+  }
+
+  /* Contact Form Inputs */
+  .form-group input, .form-group textarea {
+    font-size: 16px !important;
+    padding: 10px 14px;
+  }
+
+  /* Footer */
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+}
+
+/* Extra small devices (under 480px) */
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 1.85rem;
+  }
+  .hero-actions {
+    grid-template-columns: 1fr;
+  }
+  .hud-buttons {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Forced Phone Mode (Desktop Preview / Mode Switcher) */
+body.forced-phone-mode {
+  background: #040609;
+}
+
+body.forced-phone-mode .navbar,
+body.forced-phone-mode main,
+body.forced-phone-mode section,
+body.forced-phone-mode footer {
+  max-width: 430px;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+body.forced-phone-mode .navbar {
+  border-left: 2px solid rgba(0, 153, 255, 0.3);
+  border-right: 2px solid rgba(0, 153, 255, 0.3);
+}
+
+body.forced-phone-mode main {
+  border-left: 2px solid rgba(0, 153, 255, 0.3);
+  border-right: 2px solid rgba(0, 153, 255, 0.3);
+  box-shadow: 0 0 50px rgba(0, 153, 255, 0.25);
+}
+
+body.forced-phone-mode .nav-links {
+  display: none !important;
+}
+
+body.forced-phone-mode .mobile-menu-toggle {
+  display: flex !important;
+}
+
+body.forced-phone-mode .skills-grid,
+body.forced-phone-mode .projects-grid,
+body.forced-phone-mode .about-grid,
+body.forced-phone-mode .credentials-grid,
+body.forced-phone-mode .contact-grid {
+  grid-template-columns: 1fr !important;
+}
+
+body.forced-phone-mode .hero-actions {
+  grid-template-columns: 1fr 1fr;
+}
+
+body.forced-phone-mode .mario-controls-hud {
+  position: relative;
+  bottom: auto;
+  right: auto;
+  width: 100%;
+  margin-top: 16px;
 }
 
 /* Studio-Grade Custom Cursor & Follower */
