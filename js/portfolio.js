@@ -686,6 +686,8 @@ document.addEventListener('DOMContentLoaded', () => {
         ? emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams, EMAILJS_PUBLIC_KEY)
         : Promise.reject(new Error('EmailJS library is not available. Please verify network connectivity.'));
 
+      console.log('Attempting EmailJS send with Service:', EMAILJS_SERVICE_ID, 'Template:', EMAILJS_TEMPLATE_ID);
+
       sendPromise
         .then((response) => {
           console.log('EmailJS Success:', response.status, response.text);
@@ -704,7 +706,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formError.classList.remove('hidden');
             if (formErrorText) {
               const errDetail = (error && (error.text || error.message)) ? ` (${error.text || error.message})` : '';
-              formErrorText.innerText = `Failed to send message${errDetail}. Please try again or reach out directly:`;
+              formErrorText.innerText = `Failed to send message${errDetail}. [Service: ${EMAILJS_SERVICE_ID}]. Please try again or reach out directly:`;
             }
             const fallbackMailto = document.getElementById('error-mailto-fallback');
             if (fallbackMailto) {
