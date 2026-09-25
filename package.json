@@ -1,0 +1,19 @@
+{
+  "name": "akash-raj-portfolio",
+  "version": "1.0.0",
+  "description": "3D Interactive Super Mario Portfolio of Akash Raj",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "keywords": [
+    "portfolio",
+    "threejs",
+    "webgl",
+    "mario64",
+    "interactive",
+    "akash-raj"
+  ],
+  "author": "Akash Raj <akashraj848114@gmail.com>",
+  "license": "MIT"
+}
