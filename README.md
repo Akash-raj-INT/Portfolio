@@ -1,11 +1,16 @@
 # 🎮 Akash Raj — 3D Interactive Portfolio
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://portfolio-gru1rmugn-akash-rajs-projects-d00afc42.vercel.app/)
+
+> 🌐 **Live Website**: [https://portfolio-gru1rmugn-akash-rajs-projects-d00afc42.vercel.app/](https://portfolio-gru1rmugn-akash-rajs-projects-d00afc42.vercel.app/)
+
 An interactive, retro-futuristic 3D portfolio inspired by the iconic **Super Mario 64 Title Screen**, built with WebGL, Three.js, and modern vanilla web technologies.
 
 ---
 
 ## 🌟 Live Demo & Highlights
 
+- 🔗 **Deployment URL**: [portfolio-gru1rmugn-akash-rajs-projects-d00afc42.vercel.app](https://portfolio-gru1rmugn-akash-rajs-projects-d00afc42.vercel.app/)
 - **3D WebGL Canvas**: Real-time vertex pinch & stretch physics on 3D Mario head using Three.js and custom shaders.
 - **Mario Shaders**: Switch between Classic, Metal Mario, Gold Trophy, and Neon Cyber Wireframe materials on the fly.
 - **Retro Audio Engine**: Procedural 8-bit sound effects (coin, jump, boing) and retro synth background audio via the Web Audio API.
@@ -73,7 +78,8 @@ To run this portfolio locally:
 
 ## 📬 Contact & Connect
 
-- **Portfolio**: [Akash Raj](https://github.com/Akash-raj-INT)
+- **Live Site**: [portfolio-gru1rmugn-akash-rajs-projects-d00afc42.vercel.app](https://portfolio-gru1rmugn-akash-rajs-projects-d00afc42.vercel.app/)
+- **GitHub**: [github.com/Akash-raj-INT](https://github.com/Akash-raj-INT)
 - **LinkedIn**: [linkedin.com/in/akashraj-873b69250](https://www.linkedin.com/in/akashraj-873b69250)
 - **Email**: [akashraj848114@gmail.com](mailto:akashraj848114@gmail.com)
 

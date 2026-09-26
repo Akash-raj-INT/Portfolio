@@ -2,6 +2,7 @@
   "name": "akash-raj-portfolio",
   "version": "1.0.0",
   "description": "3D Interactive Super Mario Portfolio of Akash Raj",
+  "homepage": "https://portfolio-gru1rmugn-akash-rajs-projects-d00afc42.vercel.app/",
   "main": "index.html",
   "scripts": {
     "start": "npx serve ."
