@@ -25,10 +25,10 @@ class Mario3DEngine {
     this.parallaxOffset = new THREE.Vector2();
     
     // Scroll tracking & GSAP Camera Targets
-    const initialX = this.isMobile ? 0 : 2.0;
-    const initialY = this.isMobile ? 1.4 : 0.1;
-    const initialZ = this.isMobile ? -1.2 : 0.2;
-    const initialCamZ = this.isMobile ? 10.5 : 9;
+    const initialX = this.isMobile ? 0 : 2.6;
+    const initialY = this.isMobile ? 1.2 : 0.0;
+    const initialZ = this.isMobile ? -2.2 : -0.2;
+    const initialCamZ = this.isMobile ? 10.5 : 8.8;
     this.targetCamPos = new THREE.Vector3(0, 0, initialCamZ);
     this.currentCamPos = new THREE.Vector3(0, 0, initialCamZ);
     this.marioTargetPos = new THREE.Vector3(initialX, initialY, initialZ);
@@ -319,50 +319,69 @@ class Mario3DEngine {
     this.coinMesh.rotation.x = Math.PI / 2;
     this.envGroup.add(this.coinMesh);
 
-    // 3. Question Block
+    // 3. Question Block (Pushed further back in Z to avoid overlapping text)
     const blockGeo = new THREE.BoxGeometry(0.95, 0.95, 0.95);
     const blockMat = new THREE.MeshStandardMaterial({ color: 0xe67e22, roughness: 0.35, metalness: 0.2 });
     this.qBlockMesh = new THREE.Mesh(blockGeo, blockMat);
-    this.qBlockMesh.position.set(3.2, -2.2, -0.5);
+    this.qBlockMesh.position.set(4.2, -2.8, -3.5);
     this.envGroup.add(this.qBlockMesh);
 
-    // 4. Secondary Floating Decorative Octahedron Nodes
+    // 4. Secondary Floating Decorative Octahedron Nodes (Kept in deep background)
     this.floatingNodes = [];
-    const nodeMat = new THREE.MeshStandardMaterial({ color: 0x0099ff, wireframe: true });
-    for (let i = 0; i < (this.isMobile ? 3 : 8); i++) {
-      const nodeGeo = new THREE.OctahedronGeometry(0.3 + Math.random() * 0.3);
+    const nodeMat = new THREE.MeshStandardMaterial({ color: 0x0099ff, wireframe: true, transparent: true, opacity: 0.4 });
+    for (let i = 0; i < (this.isMobile ? 3 : 6); i++) {
+      const nodeGeo = new THREE.OctahedronGeometry(0.25 + Math.random() * 0.2);
       const mesh = new THREE.Mesh(nodeGeo, nodeMat);
       mesh.position.set(
-        (Math.random() - 0.5) * 12,
+        (Math.random() - 0.5) * 14,
         (Math.random() - 0.5) * 10,
-        -2 - Math.random() * 6
+        -4 - Math.random() * 6
       );
-      mesh.rotSpeed = (Math.random() - 0.5) * 0.02;
+      mesh.rotSpeed = (Math.random() - 0.5) * 0.015;
       this.floatingNodes.push(mesh);
       this.envGroup.add(mesh);
     }
   }
 
   /* ------------------------------------------------------------------------
+     Soft Circular Particle Texture Generator
+     ------------------------------------------------------------------------ */
+  createParticleTexture() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 32;
+    canvas.height = 32;
+    const ctx = canvas.getContext('2d');
+    const grad = ctx.createRadialGradient(16, 16, 0, 16, 16, 16);
+    grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
+    grad.addColorStop(0.35, 'rgba(255, 255, 255, 0.7)');
+    grad.addColorStop(0.75, 'rgba(255, 255, 255, 0.15)');
+    grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 32, 32);
+    return new THREE.CanvasTexture(canvas);
+  }
+
+  /* ------------------------------------------------------------------------
      Atmospheric 3D Volumetric Starfield / Dust Particles
      ------------------------------------------------------------------------ */
   buildStarfieldParticles() {
-    const count = this.isMobile ? 300 : 1000;
+    const count = this.isMobile ? 180 : 450;
     const geometry = new THREE.BufferGeometry();
     const positions = new Float32Array(count * 3);
     const colors = new Float32Array(count * 3);
 
+    // Muted, ambient cosmic hues to prevent visual competition with text
     const colorPalette = [
-      new THREE.Color(0xfbd000), // Gold
-      new THREE.Color(0x0099ff), // Blue
-      new THREE.Color(0xe52521), // Crimson
+      new THREE.Color(0xfde68a), // Soft warm starlight
+      new THREE.Color(0x93c5fd), // Soft cyan/blue
+      new THREE.Color(0xfca5a5), // Soft pastel crimson
       new THREE.Color(0xffffff)  // Pure White
     ];
 
     for (let i = 0; i < count; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 20;
+      positions[i * 3] = (Math.random() - 0.5) * 22;
       positions[i * 3 + 1] = (Math.random() - 0.5) * 25;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 15 - 2;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 16 - 3;
 
       const col = colorPalette[Math.floor(Math.random() * colorPalette.length)];
       colors[i * 3] = col.r;
@@ -374,11 +393,13 @@ class Mario3DEngine {
     geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
     const material = new THREE.PointsMaterial({
-      size: this.isMobile ? 0.06 : 0.08,
+      size: this.isMobile ? 0.03 : 0.04,
+      map: this.createParticleTexture(),
       vertexColors: true,
       transparent: true,
-      opacity: 0.75,
-      blending: THREE.AdditiveBlending
+      opacity: 0.22, // Subdued opacity to eliminate high-contrast square noise
+      depthWrite: false,
+      blending: THREE.NormalBlending
     });
 
     this.starfield = new THREE.Points(geometry, material);
@@ -460,29 +481,30 @@ class Mario3DEngine {
     });
 
     // Responsive 3D Camera & Mario Trajectories
+    // Keep Mario in deep Z and outer margins to avoid occluding text content
     if (this.isMobile) {
-      tl.to(this.targetCamPos, { x: 0, y: -0.6, z: 10.2, duration: 1 })
-        .to(this.marioTargetPos, { x: 0, y: 1.0, z: -1.5, duration: 1 }, 0)
-        .to(this.targetCamPos, { x: 0, y: -1.2, z: 10.8, duration: 1 })
-        .to(this.marioTargetPos, { x: 0, y: 0.8, z: -1.2, duration: 1 }, 1)
-        .to(this.targetCamPos, { x: 0, y: -1.8, z: 11.0, duration: 1 })
-        .to(this.marioTargetPos, { x: 0, y: 0.6, z: -1.5, duration: 1 }, 2)
-        .to(this.targetCamPos, { x: 0, y: -2.2, z: 10.5, duration: 1 })
-        .to(this.marioTargetPos, { x: 0, y: 0.8, z: -1.0, duration: 1 }, 3)
-        .to(this.targetCamPos, { x: 0, y: -0.5, z: 9.8, duration: 1 })
-        .to(this.marioTargetPos, { x: 0, y: 0.5, z: -0.8, duration: 1 }, 4);
+      tl.to(this.targetCamPos, { x: 0, y: -0.6, z: 10.8, duration: 1 })
+        .to(this.marioTargetPos, { x: 0, y: 1.2, z: -3.5, duration: 1 }, 0)
+        .to(this.targetCamPos, { x: 0, y: -1.2, z: 11.0, duration: 1 })
+        .to(this.marioTargetPos, { x: 0, y: 1.0, z: -3.8, duration: 1 }, 1)
+        .to(this.targetCamPos, { x: 0, y: -1.8, z: 11.2, duration: 1 })
+        .to(this.marioTargetPos, { x: 0, y: 0.8, z: -4.0, duration: 1 }, 2)
+        .to(this.targetCamPos, { x: 0, y: -2.2, z: 10.8, duration: 1 })
+        .to(this.marioTargetPos, { x: 0, y: 1.0, z: -3.6, duration: 1 }, 3)
+        .to(this.targetCamPos, { x: 0, y: -0.5, z: 10.2, duration: 1 })
+        .to(this.marioTargetPos, { x: 0, y: 0.8, z: -3.2, duration: 1 }, 4);
     } else {
-      // Desktop Cinematic Wide Trajectory
-      tl.to(this.targetCamPos, { x: 1.2, y: -0.6, z: 8.2, duration: 1 })
-        .to(this.marioTargetPos, { x: -1.8, y: 0.4, z: 0.5, duration: 1 }, 0)
-        .to(this.targetCamPos, { x: -1.5, y: -1.2, z: 8.8, duration: 1 })
-        .to(this.marioTargetPos, { x: 2.2, y: -0.2, z: 0.8, duration: 1 }, 1)
+      // Desktop Cinematic Trajectory (Pushed to margins & deeper Z to protect content legibility)
+      tl.to(this.targetCamPos, { x: 0.6, y: -0.6, z: 8.8, duration: 1 })
+        .to(this.marioTargetPos, { x: -3.8, y: 0.2, z: -2.0, duration: 1 }, 0)
+        .to(this.targetCamPos, { x: -0.6, y: -1.2, z: 9.0, duration: 1 })
+        .to(this.marioTargetPos, { x: 3.8, y: -0.3, z: -2.2, duration: 1 }, 1)
         .to(this.targetCamPos, { x: 0, y: -1.8, z: 9.2, duration: 1 })
-        .to(this.marioTargetPos, { x: -2.4, y: -0.8, z: 0.2, duration: 1 }, 2)
-        .to(this.targetCamPos, { x: 1.6, y: -2.2, z: 8.5, duration: 1 })
-        .to(this.marioTargetPos, { x: 2.5, y: 0.6, z: 1.0, duration: 1 }, 3)
-        .to(this.targetCamPos, { x: 0, y: -0.5, z: 7.8, duration: 1 })
-        .to(this.marioTargetPos, { x: 0, y: 0.3, z: 1.2, duration: 1 }, 4);
+        .to(this.marioTargetPos, { x: -3.9, y: -0.5, z: -2.4, duration: 1 }, 2)
+        .to(this.targetCamPos, { x: 0.8, y: -2.2, z: 8.8, duration: 1 })
+        .to(this.marioTargetPos, { x: 3.9, y: 0.3, z: -2.0, duration: 1 }, 3)
+        .to(this.targetCamPos, { x: 0, y: -0.5, z: 8.5, duration: 1 })
+        .to(this.marioTargetPos, { x: 3.2, y: 0.1, z: -1.2, duration: 1 }, 4);
     }
   }
 

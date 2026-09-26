@@ -124,26 +124,39 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // Scrollspy active nav links
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.nav-links a');
-    let currentSectionId = '';
-
-    sections.forEach(sec => {
-      const secTop = sec.offsetTop - 120;
-      const secHeight = sec.offsetHeight;
-      if (window.scrollY >= secTop && window.scrollY < secTop + secHeight) {
-        currentSectionId = sec.getAttribute('id');
-      }
-    });
-
-    navLinks.forEach(link => {
-      link.classList.remove('active');
-      if (link.getAttribute('href') === `#${currentSectionId}`) {
-        link.classList.add('active');
-      }
-    });
+    // Dynamic active section indicator (Scrollspy)
+    updateActiveNavLink();
   });
+
+  // Scrollspy: real-time active nav link & aria-current
+  const sections = document.querySelectorAll('section[id]');
+  const navAnchorLinks = document.querySelectorAll('.nav-links a');
+
+  function updateActiveNavLink() {
+    const scrollPos = window.scrollY + 180;
+    let currentId = '';
+    sections.forEach(sec => {
+      const top = sec.offsetTop;
+      const height = sec.offsetHeight;
+      if (scrollPos >= top && scrollPos < top + height) {
+        currentId = sec.getAttribute('id');
+      }
+    });
+
+    navAnchorLinks.forEach(link => {
+      const href = link.getAttribute('href');
+      const isMatch = Boolean(currentId && href === `#${currentId}`);
+      link.classList.toggle('active', isMatch);
+      if (isMatch) {
+        link.setAttribute('aria-current', 'page');
+      } else {
+        link.removeAttribute('aria-current');
+      }
+    });
+  }
+
+  // Initial call on load
+  updateActiveNavLink();
 
   // GSAP ScrollTrigger Section & Element Reveals
   if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
@@ -777,9 +790,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const viewModeBtn = document.getElementById('view-mode-btn');
   const viewModeIcon = document.getElementById('view-mode-icon');
   const viewModeLabel = document.getElementById('view-mode-label');
-  const mobileNavModeBtn = document.getElementById('mobile-nav-mode-btn');
-  const mobileNavModeIcon = document.getElementById('mobile-nav-mode-icon');
-  const mobileNavModeLabel = document.getElementById('mobile-nav-mode-label');
 
   function updateModeUI(mode) {
     const isPhone = mode === 'phone';
@@ -787,14 +797,12 @@ document.addEventListener('DOMContentLoaded', () => {
       document.body.classList.add('forced-phone-mode');
       if (viewModeLabel) viewModeLabel.textContent = 'Desktop Mode';
       if (viewModeIcon) viewModeIcon.setAttribute('data-lucide', 'monitor');
-      if (mobileNavModeLabel) mobileNavModeLabel.textContent = 'Switch to Desktop Mode';
-      if (mobileNavModeIcon) mobileNavModeIcon.setAttribute('data-lucide', 'monitor');
+      if (viewModeBtn) viewModeBtn.setAttribute('aria-pressed', 'true');
     } else {
       document.body.classList.remove('forced-phone-mode');
       if (viewModeLabel) viewModeLabel.textContent = 'Phone Mode';
       if (viewModeIcon) viewModeIcon.setAttribute('data-lucide', 'smartphone');
-      if (mobileNavModeLabel) mobileNavModeLabel.textContent = 'Switch to Phone Mode';
-      if (mobileNavModeIcon) mobileNavModeIcon.setAttribute('data-lucide', 'smartphone');
+      if (viewModeBtn) viewModeBtn.setAttribute('aria-pressed', 'false');
     }
 
     if (window.lucide) window.lucide.createIcons();
@@ -814,13 +822,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (viewModeBtn) {
     viewModeBtn.addEventListener('click', toggleViewMode);
-  }
-
-  if (mobileNavModeBtn) {
-    mobileNavModeBtn.addEventListener('click', () => {
-      toggleViewMode();
-      if (navLinks) navLinks.classList.remove('mobile-open');
-    });
   }
 
   // Auto-detect on load
